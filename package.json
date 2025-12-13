@@ -1,0 +1,10 @@
+{
+  "name": "school-sns-app",
+  "version": "0.0.1",
+  "description": "",
+  "engines": {
+    "pnpm": "10.25.0",
+    "npm": "please_use_pnpm_instead"
+  },
+  "packageManager": "pnpm@10.25.0"
+}

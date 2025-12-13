@@ -1,0 +1,30 @@
+{
+  "name": "School SNS App Development",
+  "dockerComposeFile": ["./docker-compose.yml"],
+  "service": "app-dev",
+  "workspaceFolder": "/workspace",
+  "remoteUser": "node",
+  "mounts": [
+    {
+      "type": "volume",
+      "source": "global-pnpm-store",
+      "target": "${containerWorkspaceFolder}/.pnpm-store"
+    }
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "editor.renderWhitespace": "all"
+      },
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  },
+  "postAttachCommand": "sudo chown -R node:node /app ./.pnpm-store && pnpm install",
+  "forwardPorts": [3000, 3157]
+}

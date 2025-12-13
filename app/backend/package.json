@@ -1,0 +1,23 @@
+{
+  "name": "backend",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint",
+    "format": "prettier .",
+    "check": "prettier --write . && eslint --fix"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.6",
+    "hono": "^4.11.0"
+  },
+  "devDependencies": {
+    "@hono/eslint-config": "^2.0.3",
+    "@types/node": "^20.11.17",
+    "prettier": "catalog:",
+    "tsx": "^4.7.1",
+    "typescript": "catalog:"
+  }
+}
