@@ -4,7 +4,7 @@ import type { JwtVariables } from 'hono/jwt'
 import { describeRoute, resolver, validator } from 'hono-openapi'
 import { authService } from '../../services/auth/service.js'
 import type { app } from '../index.js'
-import { loginSchema, signupSchema, tokenResponseSchema } from './schema.js'
+import { loginSchema, signupSchema, authResponseSchema } from './schema.js'
 
 type Variables = JwtVariables
 
@@ -20,7 +20,7 @@ export const auth = new Hono<{ Variables: Variables }>()
           description: 'Successful Signup',
           content: {
             'application/json': {
-              schema: resolver(tokenResponseSchema),
+              schema: resolver(authResponseSchema),
             },
           },
         },
@@ -42,7 +42,7 @@ export const auth = new Hono<{ Variables: Variables }>()
           description: 'Successful Login',
           content: {
             'application/json': {
-              schema: resolver(tokenResponseSchema),
+              schema: resolver(authResponseSchema),
             },
           },
         },
