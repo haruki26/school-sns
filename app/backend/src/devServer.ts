@@ -1,11 +1,10 @@
 import { serve } from '@hono/node-server'
 import { swaggerUI } from '@hono/swagger-ui'
 import { openAPIRouteHandler } from 'hono-openapi'
-import { auth } from './routes/auth/index.js'
 import { app } from './routes/index.js'
 
 const DEV_SERVER_PORT = 3000
-app.route('/auth', auth)
+
 app.get(
   '/openapi',
   openAPIRouteHandler(app, {
