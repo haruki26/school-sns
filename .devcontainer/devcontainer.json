@@ -26,6 +26,6 @@
       ]
     }
   },
-  "postAttachCommand": "sudo chmod 777 ./scripts/setup.sh && ./scripts/setup.sh",
+  "postAttachCommand": "sudo chmod 777 .devcontainer/scripts/setup.sh && .devcontainer/scripts/setup.sh",
   "forwardPorts": [3000, 3157, 51212]
 }
