@@ -4,11 +4,7 @@ import { setCookie } from 'hono/cookie'
 import { jwt } from 'hono/jwt'
 import type { JwtVariables } from 'hono/jwt'
 import { describeRoute, resolver, validator } from 'hono-openapi'
-import {
-  authService,
-  EmailAlreadyExistsError,
-  InvalidCredentialsError,
-} from '../../services/auth/service.js'
+import { authService } from '../../services/auth/service.js'
 import type { app } from '../index.js'
 import { loginSchema, signupSchema, authResponseSchema } from './schema.js'
 
@@ -31,21 +27,6 @@ const setAuthCookie = (c: Context, token: string) => {
 }
 
 export const auth = new Hono<{ Variables: Variables }>()
-  .onError((err, c) => {
-    // 1. メールアドレス重複エラー (409 Conflict または 400 Bad Request)
-    if (err instanceof EmailAlreadyExistsError) {
-      return c.json({ message: err.message }, 409)
-    }
-
-    // 2. 認証失敗エラー (401 Unauthorized)
-    if (err instanceof InvalidCredentialsError) {
-      return c.json({ message: err.message }, 401)
-    }
-
-    // 3. それ以外の予期せぬエラー (500)
-    console.error(err)
-    return c.json({ message: 'Internal Server Error' }, 500)
-  })
   .post(
     '/signup',
     describeRoute({
@@ -69,8 +50,12 @@ export const auth = new Hono<{ Variables: Variables }>()
     async (c) => {
       const input = c.req.valid('json')
       const result = await authService.signup(input)
-      setAuthCookie(c, result.token)
-      return c.json(result, 201)
+      if (result.type === 'Failure') {
+        return c.json({ message: result.error.message }, 409)
+      }
+
+      setAuthCookie(c, result.value.token)
+      return c.json(result.value, 201)
     },
   )
   .post(
@@ -96,8 +81,12 @@ export const auth = new Hono<{ Variables: Variables }>()
     async (c) => {
       const input = c.req.valid('json')
       const result = await authService.login(input)
-      setAuthCookie(c, result.token)
-      return c.json(result)
+      if (result.type === 'Failure') {
+        return c.json({ message: result.error.message }, 401)
+      }
+
+      setAuthCookie(c, result.value.token)
+      return c.json(result.value)
     },
   )
   .post(
