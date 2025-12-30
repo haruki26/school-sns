@@ -5,7 +5,7 @@ import { env } from './env.js'
 const payloadSchema = z.object({
   sub: z.string(),
   role: z.string(),
-  exp: z.number(),
+  exp: z.coerce.number(),
 })
 
 export const jwt = {
@@ -24,6 +24,6 @@ export const jwt = {
     return await sign(payload, env.JWT_SECRET)
   },
   parse: (token: string) => {
-    return payloadSchema.parse(decode(token))
+    return payloadSchema.parse(decode(token).payload)
   },
 }

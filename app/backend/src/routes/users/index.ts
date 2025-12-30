@@ -1,0 +1,237 @@
+import { Hono } from 'hono'
+import { describeRoute, resolver, validator } from 'hono-openapi'
+import z from 'zod'
+import { usersService } from '../../services/users/index.js'
+import { checkAuthMiddleware } from './middleware.js'
+import {
+  editUserRequestSchema,
+  getUserDetailResponseSchema,
+  userArtifactsResponseSchema,
+} from './schema.js'
+
+interface Variables {
+  userId: string
+}
+
+export const users = new Hono<{ Variables: Variables }>()
+  .get(
+    '/me',
+    describeRoute({
+      tags: ['Users'],
+      description: 'Get current user info',
+      responses: {
+        200: {
+          description: 'Successful Response',
+          content: {
+            'application/json': {
+              schema: resolver(getUserDetailResponseSchema),
+            },
+          },
+        },
+        404: {
+          description: 'User not found',
+        },
+      },
+    }),
+    checkAuthMiddleware,
+    async (c) => {
+      const userId = c.var.userId
+      const result = await usersService.getUserDetail(userId)
+
+      if (result.type === 'Failure') {
+        return c.json({ message: result.error.message }, 404)
+      }
+      return c.json(result.value, 200)
+    },
+  )
+  .patch(
+    '/me',
+    describeRoute({
+      tags: ['Users'],
+      description: 'Update current user info',
+      responses: {
+        200: {
+          description: 'Successful Response',
+          content: {
+            'application/json': {
+              schema: resolver(getUserDetailResponseSchema),
+            },
+          },
+        },
+        500: {
+          description: 'Unexpected error occurred',
+        },
+      },
+    }),
+    validator('json', editUserRequestSchema),
+    checkAuthMiddleware,
+    async (c) => {
+      const userId = c.var.userId
+      const input = c.req.valid('json')
+      const result = await usersService.editUser(userId, input)
+
+      if (result.type === 'Failure') {
+        return c.json(
+          {
+            message: 'Unexpected error occurred',
+          },
+          500,
+        )
+      }
+      return c.json(result.value, 200)
+    },
+  )
+  .get(
+    '/:userId',
+    describeRoute({
+      tags: ['Users'],
+      description: 'Get user detail by user ID',
+      responses: {
+        200: {
+          description: 'Successful Response',
+          content: {
+            'application/json': {
+              schema: resolver(getUserDetailResponseSchema),
+            },
+          },
+        },
+        404: {
+          description: 'User not found',
+        },
+      },
+    }),
+    async (c) => {
+      const { userId } = c.req.param()
+      const result = await usersService.getUserDetail(userId)
+
+      if (result.type === 'Failure') {
+        return c.json({ message: result.error.message }, 404)
+      }
+      return c.json(result.value, 200)
+    },
+  )
+  .post(
+    '/:userId/follow',
+    describeRoute({
+      tags: ['Users'],
+      description: 'Follow a user by user ID',
+      responses: {
+        200: {
+          description: 'Successful Response',
+          content: {
+            'application/json': {
+              schema: resolver(z.object({ message: z.string() })),
+            },
+          },
+        },
+      },
+    }),
+    checkAuthMiddleware,
+    async (c) => {
+      const { userId: targetUserId } = c.req.param()
+      const userId = c.get('userId')
+      await usersService.followUser(userId, targetUserId)
+      return c.json(
+        {
+          message: 'Successfully followed the user',
+        },
+        200,
+      )
+    },
+  )
+  .delete(
+    '/:userId/follow',
+    describeRoute({
+      tags: ['Users'],
+      description: 'Unfollow a user by user ID',
+      responses: {
+        200: {
+          description: 'Successful Response',
+          content: {
+            'application/json': {
+              schema: resolver(z.object({ message: z.string() })),
+            },
+          },
+        },
+      },
+    }),
+    checkAuthMiddleware,
+    async (c) => {
+      const { userId: targetUserId } = c.req.param()
+      const userId = c.var.userId
+      await usersService.cancelFollower(userId, targetUserId)
+      return c.json(
+        {
+          message: `Successfully unfollowed the user with ID ${targetUserId}`,
+        },
+        200,
+      )
+    },
+  )
+  .get('/:userId/followers', async (c) => {
+    const { userId } = c.req.param()
+    const result = await usersService.getFollowers(userId)
+
+    if (result.type === 'Failure') {
+      return c.json({ message: 'Unexpected error occurred' }, 500)
+    }
+    return c.json(result.value, 200)
+  })
+  .get(
+    '/:userId/following',
+    describeRoute({
+      tags: ['Users'],
+      description: 'Get the list of users that the specified user is following',
+      responses: {
+        200: {
+          description: 'Successful Response',
+          content: {
+            'application/json': {
+              schema: resolver(z.array(getUserDetailResponseSchema)),
+            },
+          },
+        },
+        500: {
+          description: 'Unexpected error occurred',
+        },
+      },
+    }),
+    async (c) => {
+      const { userId } = c.req.param()
+      const result = await usersService.getFollowees(userId)
+
+      if (result.type === 'Failure') {
+        return c.json({ message: 'Unexpected error occurred' }, 500)
+      }
+      return c.json(result.value, 200)
+    },
+  )
+  .get(
+    '/:userId/contents',
+    describeRoute({
+      tags: ['Users'],
+      description: 'Get the list of contents created by the specified user',
+      responses: {
+        200: {
+          description: 'Successful Response',
+          content: {
+            'application/json': {
+              schema: resolver(userArtifactsResponseSchema.array()),
+            },
+          },
+        },
+        500: {
+          description: 'Unexpected error occurred',
+        },
+      },
+    }),
+    async (c) => {
+      const { userId } = c.req.param()
+      const result = await usersService.getContentsByUserId(userId)
+
+      if (result.type === 'Failure') {
+        return c.json({ message: 'Unexpected error occurred' }, 500)
+      }
+      return c.json(result.value, 200)
+    },
+  )
