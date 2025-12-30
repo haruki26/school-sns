@@ -1,7 +1,7 @@
 import * as argon2 from 'argon2'
-import { HTTPException } from 'hono/http-exception'
 import { sign } from 'hono/jwt'
 import type { SignupInput, LoginInput } from '../../routes/auth/schema.js'
+import { EmailAlreadyExistsError, InvalidCredentialsError } from './error.js'
 import { authRepository } from './repository.js'
 
 const JWT_SECRET = process.env.JWT_SECRET ?? 'it-is-very-secret'
@@ -19,22 +19,6 @@ const generateJwt = async (user: { id: string; role: string }) => {
     exp: Math.floor(Date.now() / 1000) + TOKEN_EXPIRATION_SEC,
   }
   return await sign(payload, JWT_SECRET)
-}
-
-export class AuthError extends Error {}
-
-export class EmailAlreadyExistsError extends AuthError {
-  constructor() {
-    super('Email already exists')
-    this.name = 'EmailAlreadyExistsError'
-  }
-}
-
-export class InvalidCredentialsError extends AuthError {
-  constructor() {
-    super('Invalid email or password')
-    this.name = 'InvalidCredentialsError'
-  }
 }
 
 export const authService = {
