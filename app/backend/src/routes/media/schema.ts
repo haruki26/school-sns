@@ -12,8 +12,8 @@ const mediaResponseSchema = z.object({
 
 const getMediaQuerySchema = z
   .object({
-    limit: z.number().min(1).optional(),
-    page: z.number().min(1).optional(),
+    limit: z.coerce.number().min(1).optional(),
+    page: z.coerce.number().min(1).optional(),
   })
   .optional()
 
