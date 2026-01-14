@@ -1,3 +1,5 @@
+import { cn } from '../utils/cn'
+
 type MaterialIconProps = {
   name: string
   className?: string
@@ -9,16 +11,11 @@ export default function MaterialIcon({
   className,
   filled = false,
 }: MaterialIconProps) {
-  const classes = [
-    'material-symbols-outlined',
-    filled ? 'fill-1' : '',
-    className ?? '',
-  ]
-    .filter(Boolean)
-    .join(' ')
-
   return (
-    <span className={classes} aria-hidden="true">
+    <span
+      className={cn('material-symbols-outlined', filled && 'fill-1', className)}
+      aria-hidden="true"
+    >
       {name}
     </span>
   )

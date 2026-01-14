@@ -18,6 +18,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ArtifactsIndexRouteImport } from './routes/artifacts/index'
 import { Route as PostsNewRouteImport } from './routes/posts/new'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
+import { Route as ArtifactsArtifactIdRouteImport } from './routes/artifacts/$artifactId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -64,6 +65,11 @@ const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
   path: '/demo/tanstack-query',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArtifactsArtifactIdRoute = ArtifactsArtifactIdRouteImport.update({
+  id: '/artifacts/$artifactId',
+  path: '/artifacts/$artifactId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
+  '/artifacts/$artifactId': typeof ArtifactsArtifactIdRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/posts/new': typeof PostsNewRoute
   '/artifacts': typeof ArtifactsIndexRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
+  '/artifacts/$artifactId': typeof ArtifactsArtifactIdRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/posts/new': typeof PostsNewRoute
   '/artifacts': typeof ArtifactsIndexRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
+  '/artifacts/$artifactId': typeof ArtifactsArtifactIdRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/posts/new': typeof PostsNewRoute
   '/artifacts/': typeof ArtifactsIndexRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/settings'
     | '/signup'
+    | '/artifacts/$artifactId'
     | '/demo/tanstack-query'
     | '/posts/new'
     | '/artifacts'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/settings'
     | '/signup'
+    | '/artifacts/$artifactId'
     | '/demo/tanstack-query'
     | '/posts/new'
     | '/artifacts'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/settings'
     | '/signup'
+    | '/artifacts/$artifactId'
     | '/demo/tanstack-query'
     | '/posts/new'
     | '/artifacts/'
@@ -142,6 +154,7 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   SettingsRoute: typeof SettingsRoute
   SignupRoute: typeof SignupRoute
+  ArtifactsArtifactIdRoute: typeof ArtifactsArtifactIdRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
   PostsNewRoute: typeof PostsNewRoute
   ArtifactsIndexRoute: typeof ArtifactsIndexRoute
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoTanstackQueryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/artifacts/$artifactId': {
+      id: '/artifacts/$artifactId'
+      path: '/artifacts/$artifactId'
+      fullPath: '/artifacts/$artifactId'
+      preLoaderRoute: typeof ArtifactsArtifactIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -222,6 +242,7 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   SettingsRoute: SettingsRoute,
   SignupRoute: SignupRoute,
+  ArtifactsArtifactIdRoute: ArtifactsArtifactIdRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
   PostsNewRoute: PostsNewRoute,
   ArtifactsIndexRoute: ArtifactsIndexRoute,

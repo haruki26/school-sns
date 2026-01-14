@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { cn } from '../utils/cn'
 import MaterialIcon from './MaterialIcon'
 
 export type BottomNavItem = 'scraps' | 'artifacts' | 'search' | 'profile'
@@ -23,9 +24,10 @@ const navItems: Array<{
 export default function BottomNav({ active, className }: BottomNavProps) {
   return (
     <nav
-      className={`absolute bottom-0 left-0 right-0 w-full bg-white border-t border-slate-200 pb-[env(safe-area-inset-bottom)] z-30 ${
-        className ?? ''
-      }`}
+      className={cn(
+        'absolute bottom-0 left-0 right-0 w-full bg-white border-t border-slate-200 pb-[env(safe-area-inset-bottom)] z-30',
+        className,
+      )}
     >
       <div className="grid grid-cols-4 h-16">
         {navItems.map((item) => {
@@ -34,11 +36,12 @@ export default function BottomNav({ active, className }: BottomNavProps) {
             <Link
               key={item.key}
               to={item.to}
-              className={`flex flex-col items-center justify-center gap-0.5 h-full w-full transition-colors group ${
+              className={cn(
+                'flex flex-col items-center justify-center gap-0.5 h-full w-full transition-colors group',
                 isActive
                   ? 'text-slate-900'
-                  : 'text-slate-500 hover:text-slate-900'
-              }`}
+                  : 'text-slate-500 hover:text-slate-900',
+              )}
               aria-current={isActive ? 'page' : undefined}
             >
               <MaterialIcon
@@ -47,9 +50,10 @@ export default function BottomNav({ active, className }: BottomNavProps) {
                 className="text-[26px]"
               />
               <span
-                className={`text-[10px] tracking-tight ${
-                  isActive ? 'font-bold' : 'font-medium'
-                }`}
+                className={cn(
+                  'text-[10px] tracking-tight',
+                  isActive ? 'font-bold' : 'font-medium',
+                )}
               >
                 {item.label}
               </span>
