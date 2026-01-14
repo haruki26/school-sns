@@ -8,11 +8,11 @@
 
 @layer components {
   .app-shell {
-    @apply min-h-screen flex justify-center;
+    @apply min-h-screen flex justify-center md:items-center md:px-0 md:py-8 lg:px-0 lg:py-10 xl:px-0 xl:py-12;
   }
 
   .app-frame {
-    @apply relative flex min-h-screen w-full max-w-md flex-col;
+    @apply relative flex min-h-screen w-full max-w-md flex-col md:max-w-full md:min-h-[calc(100vh-4rem)] md:rounded-[32px] md:overflow-hidden md:shadow-2xl;
   }
 
   .screen-header {
