@@ -48,9 +48,9 @@ export const artifacts = new Hono()
       if (result.type === 'Failure') {
         return c.json(
           {
-            message: 'Unexpected error occurred while adding the artifact.',
+            message: result.error.message,
           },
-          500,
+          404,
         )
       }
       return c.json(result.value, 200)

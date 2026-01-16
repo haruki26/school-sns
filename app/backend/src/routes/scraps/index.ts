@@ -47,9 +47,9 @@ export const scraps = new Hono<{ Variables: AuthVariables }>()
       if (result.type === 'Failure') {
         return c.json(
           {
-            message: 'Unexpected error occurred while creating scrap.',
+            message: result.error.message,
           },
-          500,
+          404,
         )
       }
       return c.json(result.value, 200)

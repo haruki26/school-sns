@@ -67,6 +67,19 @@ export const tagsRepository = {
       })) !== null
     )
   },
+  isExistsTags: async (tagIds: string[]) => {
+    return (
+      (
+        await prisma.tags.findMany({
+          where: {
+            id: {
+              in: tagIds,
+            },
+          },
+        })
+      ).length === tagIds.length
+    )
+  },
   checkAttachedOthersArtifact: async (tagId: string, userId: string) => {
     const artifacts = await prisma.tagArtifacts.findMany({
       where: {

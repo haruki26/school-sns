@@ -1,5 +1,7 @@
 import { Result } from '@praha/byethrow'
 import type { Scraps } from '../../../generated/prisma/client.js'
+import { TagNotFoundError } from '../tags/error.js'
+import { tagsRepository } from '../tags/repository.js'
 import { NotScrapOwnerError, ScrapNotFoundError } from './error.js'
 import { scrapsRepository } from './repository.js'
 import type { ScrapOptions } from './type.js'
@@ -41,6 +43,10 @@ export const scrapsService = {
     content: Omit<Scraps, 'id' | 'createdAt' | 'updatedAt'>,
     tagIds?: string[],
   ) => {
+    if (tagIds !== undefined && !(await tagsRepository.isExistsTags(tagIds))) {
+      return Result.fail(new TagNotFoundError(tagIds.join(', ')))
+    }
+
     const scrap = await scrapsRepository.addScrap(content)
     if (tagIds !== undefined) {
       await scrapsRepository.registerTags(scrap.id, tagIds)

@@ -1,6 +1,8 @@
 import { Result } from '@praha/byethrow'
 import type { Artifacts } from '../../../generated/prisma/client.js'
 import { summarizePost } from '../../lib/langchain/index.js'
+import { TagNotFoundError } from '../tags/error.js'
+import { tagsRepository } from '../tags/repository.js'
 import {
   NotArtifactOwnerError,
   ArtifactNotFoundError,
@@ -56,15 +58,19 @@ export const artifactsService = {
     >,
     tagIds?: string[],
   ) => {
+    if (tagIds !== undefined && !(await tagsRepository.isExistsTags(tagIds))) {
+      return Result.fail(new TagNotFoundError(tagIds.join(', ')))
+    }
+
     const artifact = await artifactsRepository.addArtifact({
       ...content,
       summaryByAI: null,
       publishedAt: content.status === 'PUBLISHED' ? new Date() : null,
     })
-
     if (tagIds !== undefined) {
       await artifactsRepository.registerTags(artifact.id, tagIds)
     }
+
     return Result.succeed(artifact)
   },
   updateArtifact: async (
