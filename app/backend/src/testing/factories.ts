@@ -1,10 +1,9 @@
 import argon2 from 'argon2'
+import type { UserRole } from '../../generated/prisma/enums.js'
 import { prisma } from '../lib/prisma.js'
 import { authRepository } from '../services/auth/repository.js'
 
 const authRepo = authRepository
-
-type UserRole = 'ADMIN' | 'STUDENT' | 'TEACHER'
 
 /**
  * テスト用の共通ユーザー作成関数
