@@ -3,6 +3,11 @@ import { useQuery } from '@tanstack/react-query'
 
 export const Route = createFileRoute('/demo/tanstack-query')({
   component: TanStackQueryDemo,
+  staticData: {
+    shell: {
+      disableShell: true,
+    },
+  },
 })
 
 function TanStackQueryDemo() {
