@@ -107,6 +107,11 @@ export const scrapsRepository = {
     }
   },
   deleteScrap: async (scrapId: string) => {
+    await prisma.scraps.updateMany({
+      where: { parentId: scrapId },
+      data: { parentId: null },
+    })
+
     await prisma.scraps.delete({
       where: { id: scrapId },
     })
@@ -118,20 +123,6 @@ export const scrapsRepository = {
     return await prisma.tagScraps.findMany({
       where: { tagId: { in: tagIds } },
       select: { scrapId: true },
-    })
-  },
-  hasChildren: async (scrapId: string) => {
-    return (
-      (await prisma.scraps.findFirst({
-        where: { parentId: scrapId },
-        select: { id: true },
-      })) !== null
-    )
-  },
-  updateChildrenParentId: async (scrapId: string, parentId: string | null) => {
-    await prisma.scraps.updateMany({
-      where: { parentId: scrapId },
-      data: { parentId },
     })
   },
 }
