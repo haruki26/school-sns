@@ -51,9 +51,9 @@ model Users {
 
 model UserRelationships {
   id String @id @default(uuid(4))
-  follower Users @relation("follower", fields: [followerId], references: [id])
+  follower Users @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
   followerId String
-  followee Users @relation("followee", fields: [followeeId], references: [id])
+  followee Users @relation("followee", fields: [followeeId], references: [id], onDelete: Cascade)
   followeeId String
   createdAt DateTime @default(now())
 
@@ -74,14 +74,14 @@ model WorldMembers {
   id String @id @default(uuid(4))
   world Worlds @relation(fields: [worldId], references: [id])
   worldId String
-  user Users @relation(fields: [userId], references: [id])
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   joinedAt DateTime @default(now())
 }
 
 model Artifacts {
   id String @id @default(uuid(4))
-  user Users @relation(fields: [userId], references: [id])
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   title String
   body String
@@ -114,7 +114,7 @@ model Scraps {
 
 model Comments {
   id String @id @default(uuid(4))
-  user Users @relation(fields: [userId], references: [id])
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   parent Comments? @relation("CommentToParent", fields: [parentId], references: [id])
   parentId String?
@@ -140,7 +140,7 @@ model Tags {
 
 model TagArtifacts {
   id String @id @default(uuid(4))
-  artifact Artifacts @relation(fields: [artifactId], references: [id])
+  artifact Artifacts @relation(fields: [artifactId], references: [id], onDelete: Cascade)
   artifactId String
   tag Tags @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId String
@@ -149,7 +149,7 @@ model TagArtifacts {
 
 model Assets {
   id String @id @default(uuid(4))
-  user Users @relation(fields: [userId], references: [id])
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   url String
   fileType String
@@ -160,16 +160,16 @@ model Assets {
 
 model Mentions {
   id String @id @default(uuid(4))
-  artifact Artifacts @relation(fields: [artifactId], references: [id])
+  artifact Artifacts @relation(fields: [artifactId], references: [id], onDelete: Cascade)
   artifactId String
-  user Users @relation(fields: [mentionedUserId], references: [id])
+  user Users @relation(fields: [mentionedUserId], references: [id], onDelete: Cascade)
   mentionedUserId String
   createdAt DateTime @default(now())
 }
 
 model TagScraps {
   id String @id @default(uuid(4))
-  scrap Scraps @relation(fields: [scrapId], references: [id])
+  scrap Scraps @relation(fields: [scrapId], references: [id], onDelete: Cascade)
   scrapId String
   tag Tags @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId String

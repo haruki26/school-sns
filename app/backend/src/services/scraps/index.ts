@@ -44,6 +44,7 @@ export const scrapsService = {
     if (!(await scrapsRepository.isOwnScrap(scrapId, userId))) {
       return Result.fail(new NotScrapOwnerError())
     }
+
     await scrapsRepository.deleteScrap(scrapId)
     return Result.succeed(undefined)
   },

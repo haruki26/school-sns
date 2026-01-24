@@ -107,6 +107,11 @@ export const scrapsRepository = {
     }
   },
   deleteScrap: async (scrapId: string) => {
+    await prisma.scraps.updateMany({
+      where: { parentId: scrapId },
+      data: { parentId: null },
+    })
+
     await prisma.scraps.delete({
       where: { id: scrapId },
     })
