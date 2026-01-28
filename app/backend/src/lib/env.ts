@@ -26,6 +26,7 @@ const EnvSchema = z.object({
   LLM_PROVIDER: z.enum(['fake', 'gemini']).default('fake'),
   GOOGLE_ID: z.string(),
   GOOGLE_SECRET: z.string(),
+  GOOGLE_REDIRECT_URI: z.string(),
 })
 
 const validateEnv = () => {

@@ -128,7 +128,6 @@ export const auth = new Hono<{ Variables: AuthVariables }>()
       client_id: env.GOOGLE_ID,
       client_secret: env.GOOGLE_SECRET,
       scope: ['openid', 'email', 'profile'],
-      // redirect_uri: env.GOOGLE_REDIRECT_URI,
     }),
     async (c) => {
       // 1. Googleからユーザー情報を取得
@@ -171,11 +170,11 @@ export const auth = new Hono<{ Variables: AuthVariables }>()
         maxAge: 60 * 60 * 24, // 1日
       })
 
-      // 5. ログイン成功レスポンス
-      return c.json({
-        message: 'Google Login Successful',
-        user: user,
-      })
+      // 5. ログイン成功時リダイレクト
+      const redirectUrl = env.GOOGLE_REDIRECT_URI
+        ? env.GOOGLE_REDIRECT_URI
+        : '/'
+      return c.redirect(redirectUrl)
     },
   )
 
