@@ -1,4 +1,4 @@
-import { UserRole } from '../../../generated/prisma/enums.js'
+import { UserRole } from '../../lib/enum.js'
 import { prisma } from '../../lib/prisma.js'
 import { createTestUser } from '../../testing/factories.js'
 import { cleanupDatabase } from '../../testing/setup.js'

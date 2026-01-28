@@ -1,4 +1,4 @@
-import type { Artifacts } from '../../../generated/prisma/client.js'
+import type { Artifacts } from '../../../generated/prisma/sqlserver/client.js'
 import { prisma } from '../../lib/prisma.js'
 import type { ArtifactOptions } from './type.js'
 

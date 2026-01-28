@@ -67,8 +67,18 @@ describe('ScrapsRepository', () => {
         })
       }
 
-      const page1 = await repo.getScraps({ page: 1, limit: 1 })
-      const page2 = await repo.getScraps({ page: 2, limit: 1 })
+      const page1 = await repo.getScraps({
+        page: 1,
+        limit: 1,
+        onlyRootScraps: false,
+        includeUserInfo: false,
+      })
+      const page2 = await repo.getScraps({
+        page: 2,
+        limit: 1,
+        onlyRootScraps: false,
+        includeUserInfo: false,
+      })
       expect(page1).toHaveLength(1)
       expect(page2).toHaveLength(1)
       expect(page1[0].id).not.toBe(page2[0].id)
@@ -95,7 +105,11 @@ describe('ScrapsRepository', () => {
         parentId: null,
       })
 
-      const results = await repo.getScraps({ ids: [s1.id, s2.id] })
+      const results = await repo.getScraps({
+        ids: [s1.id, s2.id],
+        onlyRootScraps: false,
+        includeUserInfo: false,
+      })
       expect(results).toHaveLength(2)
       expect(results.map((r) => r.id)).toContain(s1.id)
       expect(results.map((r) => r.id)).toContain(s2.id)

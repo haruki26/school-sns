@@ -10,7 +10,7 @@ export const authRepository = {
   },
 
   findByGoogleId: async (googleId: string) => {
-    return await prisma.users.findUnique({
+    return await prisma.users.findFirst({
       where: { googleId },
     })
   },

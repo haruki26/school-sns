@@ -1,6 +1,6 @@
 import { Result } from '@praha/byethrow'
 import z from 'zod'
-import type { Tags } from '../../../generated/prisma/client.js'
+import type { Tags } from '../../../generated/prisma/sqlserver/client.js'
 import {
   ExistsTagNameError,
   InvalidQueryOptions,
