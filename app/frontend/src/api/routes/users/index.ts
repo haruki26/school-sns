@@ -1,23 +1,46 @@
-import { queryOptions } from '@tanstack/react-query'
+import {
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query'
 import { usersKeys } from '@/api/routes/users/key'
 import { apiClient } from '@/api/shared/apiClient'
-import { ApiError } from '@/api/shared/error'
+import { parseApiResponse } from '@/api/shared/error'
+
+type UpdateProfileInput = {
+  userName?: string
+  bio?: string | null
+  avatarUrl?: string | null
+}
+
+export type SelfInfo = {
+  id: string
+  userName: string
+  bio: string | null
+  avatarUrl: string | null
+}
 
 const useFetchSelfInfoOptions = () =>
   queryOptions({
     queryKey: usersKeys.me(),
-    queryFn: async () => {
+    queryFn: async (): Promise<SelfInfo> => {
       const res = await apiClient.users.me.$get()
-
-      if (!res.ok) {
-        const data = await res.json()
-        if ('message' in data) {
-          throw new ApiError(data.message, res.status)
-        }
-        throw new ApiError('An unknown error occurred', res.status)
-      }
-      return await res.json()
+      return await parseApiResponse<SelfInfo>(res)
     },
   })
 
-export { useFetchSelfInfoOptions }
+const useUpdateProfileMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (body: UpdateProfileInput) => {
+      const res = await apiClient.users.me.$patch({ json: body })
+      return await parseApiResponse(res)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: usersKeys.me() })
+    },
+  })
+}
+
+export { useFetchSelfInfoOptions, useUpdateProfileMutation }

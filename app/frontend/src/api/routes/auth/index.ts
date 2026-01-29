@@ -1,26 +1,19 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import type {
   LoginRequestBody,
   SignupRequestBody,
 } from '@/api/routes/auth/type'
 import { usersKeys } from '@/api/routes/users/key'
 import { apiBaseUrl, apiClient } from '@/api/shared/apiClient'
-import { ApiError } from '@/api/shared/error'
+import { parseApiResponse } from '@/api/shared/error'
 
 const useLoginMutation = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (body: LoginRequestBody) => {
       const res = await apiClient.auth.login.$post({ json: body })
-
-      if (!res.ok) {
-        const data = await res.json()
-        if ('message' in data) {
-          throw new ApiError(data.message, res.status)
-        }
-        throw new ApiError('An unknown error occurred', res.status)
-      }
-      return await res.json()
+      return await parseApiResponse(res)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: usersKeys.me() })
@@ -42,15 +35,7 @@ const useSignupMutation = () => {
   return useMutation({
     mutationFn: async (body: SignupRequestBody) => {
       const res = await apiClient.auth.signup.$post({ json: body })
-
-      if (!res.ok) {
-        const data = await res.json()
-        if ('message' in data) {
-          throw new ApiError(data.message, res.status)
-        }
-        throw new ApiError('An unknown error occurred', res.status)
-      }
-      return await res.json()
+      return await parseApiResponse(res)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: usersKeys.me() })
@@ -58,4 +43,25 @@ const useSignupMutation = () => {
   })
 }
 
-export { useLoginMutation, useGoogleLoginMutation, useSignupMutation }
+const useLogoutMutation = () => {
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+
+  return useMutation({
+    mutationFn: async () => {
+      const res = await apiClient.auth.logout.$post()
+      return await parseApiResponse(res)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: usersKeys.me() })
+      navigate({ to: '/auth/login' })
+    },
+  })
+}
+
+export {
+  useLoginMutation,
+  useGoogleLoginMutation,
+  useSignupMutation,
+  useLogoutMutation,
+}

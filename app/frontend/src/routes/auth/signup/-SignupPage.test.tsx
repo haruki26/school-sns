@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { SignupPage } from './index.lazy'
+import { createLazyFileRouteMock } from '@/testing/routerMocks'
 
 vi.mock('@tanstack/react-router', () => {
   return {
@@ -14,7 +15,7 @@ vi.mock('@tanstack/react-router', () => {
         </a>
       )
     },
-    createLazyFileRoute: () => (options: any) => options,
+    createLazyFileRoute: createLazyFileRouteMock(),
     useNavigate: () => vi.fn(),
   }
 })

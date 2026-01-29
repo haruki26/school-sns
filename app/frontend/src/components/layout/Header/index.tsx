@@ -1,4 +1,4 @@
-import { useMatch, useMatches } from '@tanstack/react-router'
+import { Link, useMatch, useMatches } from '@tanstack/react-router'
 
 import type { AppPath } from '@/types'
 import BackArrow from '@/components/ui/BackArrow'
@@ -56,7 +56,11 @@ export default function Header() {
       <h1 className="font-bold text-lg">
         {currentTitle !== undefined ? currentTitle.title : 'Campus Link'}
       </h1>
-      {!isAuthPage && <Avatar className="h-full py-1" />}
+      {!isAuthPage && (
+        <Link to="/settings" aria-label="設定へ移動">
+          <Avatar className="h-full py-1" />
+        </Link>
+      )}
     </header>
   )
 }

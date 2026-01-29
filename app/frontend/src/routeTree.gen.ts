@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TimelineRouteRouteImport } from './routes/timeline/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as TimelineScrapsIndexRouteImport } from './routes/timeline/scraps/index'
 import { Route as TimelineArtifactsIndexRouteImport } from './routes/timeline/artifacts/index'
 import { Route as SearchResultIndexRouteImport } from './routes/search/result/index'
@@ -23,7 +24,6 @@ import { Route as TimelineScrapsDetailIdIndexRouteImport } from './routes/timeli
 import { Route as TimelineArtifactsEditIdIndexRouteImport } from './routes/timeline/artifacts/edit/$id/index'
 import { Route as TimelineArtifactsDetailIdIndexRouteImport } from './routes/timeline/artifacts/detail/$id/index'
 
-const SettingsIndexLazyRouteImport = createFileRoute('/settings/')()
 const SearchIndexLazyRouteImport = createFileRoute('/search/')()
 const AuthLoginIndexLazyRouteImport = createFileRoute('/auth/login/')()
 const TimelineScrapsCreateIndexLazyRouteImport = createFileRoute(
@@ -43,18 +43,18 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SettingsIndexLazyRoute = SettingsIndexLazyRouteImport.update({
+const SearchIndexLazyRoute = SearchIndexLazyRouteImport.update({
+  id: '/search/',
+  path: '/search/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/search/index.lazy').then((d) => d.Route))
+const SettingsIndexRoute = SettingsIndexRouteImport.update({
   id: '/settings/',
   path: '/settings/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() =>
   import('./routes/settings/index.lazy').then((d) => d.Route),
 )
-const SearchIndexLazyRoute = SearchIndexLazyRouteImport.update({
-  id: '/search/',
-  path: '/search/',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/search/index.lazy').then((d) => d.Route))
 const AuthLoginIndexLazyRoute = AuthLoginIndexLazyRouteImport.update({
   id: '/auth/login/',
   path: '/auth/login/',
@@ -157,8 +157,8 @@ const TimelineArtifactsDetailIdIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/timeline': typeof TimelineRouteRouteWithChildren
+  '/settings/': typeof SettingsIndexRoute
   '/search/': typeof SearchIndexLazyRoute
-  '/settings/': typeof SettingsIndexLazyRoute
   '/auth/signup/': typeof AuthSignupIndexRoute
   '/search/result/': typeof SearchResultIndexRoute
   '/timeline/artifacts/': typeof TimelineArtifactsIndexRoute
@@ -175,8 +175,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/timeline': typeof TimelineRouteRouteWithChildren
+  '/settings': typeof SettingsIndexRoute
   '/search': typeof SearchIndexLazyRoute
-  '/settings': typeof SettingsIndexLazyRoute
   '/auth/signup': typeof AuthSignupIndexRoute
   '/search/result': typeof SearchResultIndexRoute
   '/timeline/artifacts': typeof TimelineArtifactsIndexRoute
@@ -194,8 +194,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/timeline': typeof TimelineRouteRouteWithChildren
+  '/settings/': typeof SettingsIndexRoute
   '/search/': typeof SearchIndexLazyRoute
-  '/settings/': typeof SettingsIndexLazyRoute
   '/auth/signup/': typeof AuthSignupIndexRoute
   '/search/result/': typeof SearchResultIndexRoute
   '/timeline/artifacts/': typeof TimelineArtifactsIndexRoute
@@ -214,8 +214,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/timeline'
-    | '/search/'
     | '/settings/'
+    | '/search/'
     | '/auth/signup/'
     | '/search/result/'
     | '/timeline/artifacts/'
@@ -232,8 +232,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/timeline'
-    | '/search'
     | '/settings'
+    | '/search'
     | '/auth/signup'
     | '/search/result'
     | '/timeline/artifacts'
@@ -250,8 +250,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/timeline'
-    | '/search/'
     | '/settings/'
+    | '/search/'
     | '/auth/signup/'
     | '/search/result/'
     | '/timeline/artifacts/'
@@ -269,8 +269,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   TimelineRouteRoute: typeof TimelineRouteRouteWithChildren
+  SettingsIndexRoute: typeof SettingsIndexRoute
   SearchIndexLazyRoute: typeof SearchIndexLazyRoute
-  SettingsIndexLazyRoute: typeof SettingsIndexLazyRoute
   AuthSignupIndexRoute: typeof AuthSignupIndexRoute
   SearchResultIndexRoute: typeof SearchResultIndexRoute
   AuthLoginIndexLazyRoute: typeof AuthLoginIndexLazyRoute
@@ -293,18 +293,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/settings/': {
-      id: '/settings/'
-      path: '/settings'
-      fullPath: '/settings/'
-      preLoaderRoute: typeof SettingsIndexLazyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/search/': {
       id: '/search/'
       path: '/search'
       fullPath: '/search/'
       preLoaderRoute: typeof SearchIndexLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings/': {
+      id: '/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof SettingsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/login/': {
@@ -423,8 +423,8 @@ const TimelineRouteRouteWithChildren = TimelineRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   TimelineRouteRoute: TimelineRouteRouteWithChildren,
+  SettingsIndexRoute: SettingsIndexRoute,
   SearchIndexLazyRoute: SearchIndexLazyRoute,
-  SettingsIndexLazyRoute: SettingsIndexLazyRoute,
   AuthSignupIndexRoute: AuthSignupIndexRoute,
   SearchResultIndexRoute: SearchResultIndexRoute,
   AuthLoginIndexLazyRoute: AuthLoginIndexLazyRoute,
