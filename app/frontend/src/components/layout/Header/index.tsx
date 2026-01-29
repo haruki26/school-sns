@@ -7,7 +7,7 @@ import { cn } from '@/utils/cn'
 
 type TitlePath = Extract<
   NonNullable<AppPath['to']>,
-  '/auth/login' | '/auth/signup' | '/timeline/artifacts'
+  '/auth/login' | '/auth/signup' | '/timeline/artifacts' | '/settings'
 >
 
 interface PathWithTitle {
@@ -19,6 +19,7 @@ const HeaderTitles: Array<PathWithTitle> = [
   { path: '/auth/login', title: 'ログイン' },
   { path: '/auth/signup', title: '新規登録' },
   { path: '/timeline/artifacts', title: '記事' },
+  { path: '/settings', title: '設定' },
 ]
 
 export default function Header() {

@@ -26,7 +26,7 @@ const ProfileEditForm: React.FC<Props> = ({
   })
 
   return (
-    <Card className="flex flex-col gap-4 bg-white shadow-sm">
+    <Card className="flex flex-col gap-4 border border-slate-100 bg-white shadow-sm">
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-50 text-amber-600">
           <Image className="h-5 w-5" />

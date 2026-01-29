@@ -12,28 +12,21 @@ export function SettingsPage() {
   const data = Route.useLoaderData()
 
   return (
-    <div className="min-h-dvh bg-linear-to-b from-amber-50 to-blue-50">
-      <div className="mx-auto flex max-w-md flex-col gap-4 px-4 py-6">
-        <header className="flex flex-col gap-1">
-          <p className="text-xs uppercase tracking-wide text-slate-500">
-            Settings
-          </p>
-          <h1 className="text-xl font-bold text-slate-900">設定</h1>
-          <p className="text-sm text-slate-600">
-            プロフィールや通知の設定を管理します
-          </p>
-        </header>
-
+    <div className="min-h-full bg-slate-50 text-slate-900">
+      <div className="mx-auto flex max-w-md flex-col pb-10">
         <ProfileSection user={data} />
-        <section aria-label="アカウント設定" className="flex flex-col gap-2">
-          <h2 className="text-sm font-semibold text-slate-800">
-            アカウント設定
-          </h2>
+        <div className="mt-6 px-4">
+          <h3 className="mb-2 ml-3 text-xs font-bold uppercase tracking-wider text-slate-400">
+            アカウント
+          </h3>
           <AccountSettings />
-        </section>
-
-        <LogoutSection />
-        <VersionInfo />
+        </div>
+        <div className="mt-6 px-4">
+          <LogoutSection />
+        </div>
+        <div className="mt-8 text-center">
+          <VersionInfo />
+        </div>
       </div>
     </div>
   )

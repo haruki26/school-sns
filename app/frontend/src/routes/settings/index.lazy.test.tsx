@@ -48,19 +48,17 @@ describe('SettingsPage', () => {
     renderPage()
 
     expect(await screen.findByText('Test User')).toBeTruthy()
-    expect(screen.getByText('アカウント設定')).toBeTruthy()
+    expect(screen.getByText('アカウント')).toBeTruthy()
     expect(screen.getByRole('button', { name: 'ログアウト' })).toBeTruthy()
-    expect(screen.getByText(/version/i)).toBeTruthy()
+    expect(screen.getByText('v1.0.0')).toBeTruthy()
   })
 
   it('allows entering edit mode and opening logout dialog', async () => {
     renderPage()
 
-    const editButton = (
-      await screen.findAllByRole('button', {
-        name: 'プロフィールを編集',
-      })
-    )[0]
+    const editButton = await screen.findByRole('button', {
+      name: '自己紹介を編集',
+    })
     fireEvent.click(editButton)
     expect(screen.getByText('保存')).toBeTruthy()
 
