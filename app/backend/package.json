@@ -10,6 +10,7 @@
     "check": "prettier --write . && eslint --fix",
     "prisma:mig": "prisma migrate dev --schema=./prisma/sqlserver/schema.prisma",
     "prisma:gen": "prisma generate --schema=./prisma/sqlserver/schema.prisma",
+    "prisma:seed": "prisma db seed",
     "prisma:std": "prisma studio --schema=./prisma/sqlserver/schema.prisma --port 51212",
     "test": "vitest run",
     "test:pre": "DATABASE_URL=\"file:./database/test.db\" npx prisma db push --accept-data-loss",
@@ -33,6 +34,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.2.0",
     "@hono/eslint-config": "^2.0.3",
     "@types/better-sqlite3": "^7.6.13",
     "@types/ioredis-mock": "^8.2.6",
@@ -42,9 +44,13 @@
     "ioredis-mock": "^8.13.1",
     "prettier": "catalog:",
     "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
     "tsx": "^4.7.1",
     "typescript": "catalog:",
     "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:"
+  },
+  "prisma": {
+    "seed": "tsx src/lib/seed.ts"
   }
 }
