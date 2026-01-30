@@ -97,6 +97,8 @@ model Artifacts {
   tagArtifacts TagArtifacts[]
 
   mentions Mentions[]
+
+  comments Comments[]
 }
 
 model Scraps {
@@ -121,6 +123,8 @@ model Comments {
   userId String
   parent Comments? @relation("CommentToParent", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   parentId String?
+  artifact Artifacts @relation(fields: [artifactId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  artifactId String
 
   body String
   createdAt DateTime @default(now())
