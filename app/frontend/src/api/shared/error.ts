@@ -24,8 +24,3 @@ export const parseApiError = async (res: Response): Promise<never> => {
 
   throw new ApiError('An unknown error occurred', res.status)
 }
-
-export const ensureOk = async (res: Response): Promise<Response> => {
-  if (!res.ok) return await parseApiError(res)
-  return res
-}
