@@ -1,22 +1,67 @@
-import { queryOptions } from '@tanstack/react-query'
 import type { SearchType } from 'backend/src/services/search/type'
-import { searchKeys } from '@/api/routes/search/key'
 import { apiClient } from '@/api/shared/apiClient'
-import { parseApiError } from '@/api/shared/error'
+import { ApiError } from '@/api/shared/error'
 
-const useSearchOptions = (keyword: string, searchType: SearchType = 'all') =>
-  queryOptions({
-    queryKey: searchKeys.result(keyword, searchType),
-    queryFn: async () => {
-      const res = await apiClient.search.$get({
-        query: { keyword, type: searchType },
+const invokeSearch = async (
+  keyword: string,
+  type: Exclude<SearchType, 'all'>,
+) => {
+  switch (type) {
+    case 'user': {
+      const res = await apiClient.search.user.$get({
+        query: { keyword },
       })
 
-      if (!res.ok) {
-        return await parseApiError(res)
+      if (res.ok) {
+        return {
+          type,
+          data: await res.json(),
+        }
       }
-      return await res.json()
-    },
-  })
+      break
+    }
+    case 'scrap': {
+      const res = await apiClient.search.scrap.$get({
+        query: { keyword },
+      })
 
-export { useSearchOptions }
+      if (res.ok) {
+        return {
+          type,
+          data: await res.json(),
+        }
+      }
+      break
+    }
+    case 'artifact': {
+      const res = await apiClient.search.artifact.$get({
+        query: { keyword },
+      })
+
+      if (res.ok) {
+        return {
+          type,
+          data: await res.json(),
+        }
+      }
+      break
+    }
+    case 'tag': {
+      const res = await apiClient.search.tag.$get({
+        query: { keyword },
+      })
+
+      if (res.ok) {
+        return {
+          type,
+          data: await res.json(),
+        }
+      }
+      break
+    }
+  }
+
+  throw new ApiError('Search request failed', 500)
+}
+
+export { invokeSearch }
