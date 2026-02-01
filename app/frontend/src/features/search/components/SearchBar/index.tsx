@@ -1,4 +1,5 @@
 import { Search, X } from 'lucide-react'
+import { useEffect } from 'react'
 import { useSearchForm } from '@/features/search/hooks/useSearchForm'
 
 interface Props {
@@ -8,6 +9,10 @@ interface Props {
 
 const SearchBar: React.FC<Props> = ({ placeholder = 'Search...', keyword }) => {
   const { form } = useSearchForm({ keyword })
+
+  useEffect(() => {
+    form.setFieldValue('keyword', keyword)
+  }, [keyword])
 
   return (
     <form
