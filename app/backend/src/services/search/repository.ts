@@ -4,6 +4,9 @@ export const searchRepository = {
   findArtifactsByKeyword: async (keyword: string) => {
     return await prisma.artifacts.findMany({
       where: {
+        publishedAt: {
+          not: null,
+        },
         OR: [
           {
             title: {
