@@ -15,7 +15,7 @@ const invokeSearch = async (
       if (res.ok) {
         return {
           type,
-          data: await res.json(),
+          result: await res.json(),
         }
       }
       break
@@ -28,7 +28,7 @@ const invokeSearch = async (
       if (res.ok) {
         return {
           type,
-          data: await res.json(),
+          result: await res.json(),
         }
       }
       break
@@ -41,7 +41,7 @@ const invokeSearch = async (
       if (res.ok) {
         return {
           type,
-          data: await res.json(),
+          result: await res.json(),
         }
       }
       break
@@ -54,7 +54,7 @@ const invokeSearch = async (
       if (res.ok) {
         return {
           type,
-          data: await res.json(),
+          result: await res.json(),
         }
       }
       break
