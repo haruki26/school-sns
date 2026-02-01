@@ -14,7 +14,9 @@
     "src/**/*",
     "vitest.config.ts",
     "prisma.config.ts",
-    "src/lib/seed.ts"
+    "prisma/sqlserver/seed.ts",
+    "prisma/sqlite/seed.ts",
+    "prisma/postgresql/seed.ts"
   ],
   "exclude": ["node_modules"]
 }

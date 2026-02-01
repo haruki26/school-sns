@@ -27,6 +27,7 @@ const EnvSchema = z.object({
   GOOGLE_ID: z.string(),
   GOOGLE_SECRET: z.string(),
   GOOGLE_REDIRECT_URI: z.string(),
+  PROVIDER_TYPE: z.string(),
 })
 
 const validateEnv = () => {

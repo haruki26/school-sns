@@ -8,17 +8,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-}
-
-enum UserRole {
-  ADMIN
-  STUDENT
-  TEACHER
-}
-
-enum ArtifactStatus {
-  DRAFT
-  PUBLISHED
+  url = env("DATABASE_URL")
 }
 
 model Users {
@@ -26,7 +16,7 @@ model Users {
   userName String
   email String @unique
   passwordHash String?
-  role UserRole @default(STUDENT)
+  role String @default("STUDENT")
   bio String?
   avatarUrl String?
   googleId String? @unique
@@ -38,6 +28,8 @@ model Users {
   userFollowerRelationships UserRelationships[] @relation("follower")
   userFolloweeRelationships UserRelationships[] @relation("followee")
 
+  oauth2Token OAuthConnection[]
+
   artifacts Artifacts[]
 
   scraps Scraps[]
@@ -47,6 +39,17 @@ model Users {
   assets Assets[]
 
   mentions Mentions[]
+}
+
+model OAuthConnection {
+  id           String   @id @default(uuid())
+  user         Users    @relation(fields: [userId], references: [id])
+  userId       String   @unique
+  provider     String   @default("google")
+  accessToken  String
+  refreshToken String?
+  expiresAt    DateTime?
+  updatedAt    DateTime @updatedAt
 }
 
 model UserRelationships {
@@ -86,7 +89,7 @@ model Artifacts {
   title String
   body String
   summaryByAI String?
-  status ArtifactStatus @default(DRAFT)
+  status String @default("DRAFT")
   publishedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -94,6 +97,8 @@ model Artifacts {
   tagArtifacts TagArtifacts[]
 
   mentions Mentions[]
+
+  comments Comments[]
 }
 
 model Scraps {
@@ -118,6 +123,8 @@ model Comments {
   userId String
   parent Comments? @relation("CommentToParent", fields: [parentId], references: [id])
   parentId String?
+  artifact Artifacts @relation(fields: [artifactId], references: [id], onDelete: Cascade)
+  artifactId String
 
   body String
   createdAt DateTime @default(now())
