@@ -25,8 +25,8 @@ const SearchBar: React.FC<Props> = ({ placeholder = 'Search...', keyword }) => {
     >
       <form.Field name="keyword">
         {(field) => (
-          <div className="flex w-full justify-between items-center gap-2 bg-slate-300 px-4 py-2 rounded-md">
-            <div className="flex gap-3">
+          <div className="flex w-full items-center gap-2 bg-slate-300 px-4 py-2 rounded-md">
+            <div className="flex gap-3 flex-1 items-center">
               <Search className="h-6 w-6 text-slate-700" />
               <input
                 type="text"
