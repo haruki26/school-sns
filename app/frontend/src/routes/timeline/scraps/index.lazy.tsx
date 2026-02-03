@@ -41,8 +41,8 @@ function RouteComponent() {
             scrap={{
               id: d.id,
               content: d.body,
-              createdAt: d.createdAt,
             }}
+            className="px-4 py-3 rounded-lg shadow-sm gap-3"
           />
         ))}
       </div>
