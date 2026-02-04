@@ -7,7 +7,7 @@ import IconWithLabel from '@/components/ui/IconWithLabel'
 import MarkdownViewer from '@/features/timeline/components/MarkdownViewer'
 import { useFetchSelfInfoOptions } from '@/api/routes/users'
 import EditButton from '@/features/timeline/components/EditButton'
-import AISummary from '@/features/timeline/artifacts/components/AISummary'
+import AISummary from '@/features/timeline/artifacts/detail/components/AISummary'
 
 export const Route = createLazyFileRoute('/timeline/artifacts/detail/$id/')({
   component: RouteComponent,
