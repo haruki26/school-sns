@@ -8,12 +8,14 @@ import type React from 'react'
 import { cn } from '@/utils/cn'
 
 interface Props {
+  id?: string
   initialContent: string | null
   onChange: (content: string) => void
   className?: string
 }
 
 const Editor: React.FC<Props> = ({
+  id,
   initialContent = null,
   onChange,
   className,
@@ -35,6 +37,7 @@ const Editor: React.FC<Props> = ({
 
   return (
     <BlockNoteView
+      id={id}
       editor={editor}
       onChange={handleChange}
       formattingToolbar
@@ -43,7 +46,7 @@ const Editor: React.FC<Props> = ({
       spellCheck
       slashMenu
       linkToolbar
-      className={cn('px-2 py-4 min-h-50', className)}
+      className={cn('min-h-full', className)}
     />
   )
 }
