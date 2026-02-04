@@ -1,15 +1,12 @@
 import { Link } from '@tanstack/react-router'
 import { Heart, MessageSquare } from 'lucide-react'
+import type { Owner } from '@/features/timeline/types'
 import Avatar from '@/components/ui/Avatar'
 import { cn } from '@/utils/cn'
 import IconWithLabel from '@/components/ui/IconWithLabel'
 
 interface Props {
-  owner: {
-    id: string
-    avatarUrl: string | null
-    name: string
-  }
+  owner: Owner
   scrap: {
     id: string
     content: string

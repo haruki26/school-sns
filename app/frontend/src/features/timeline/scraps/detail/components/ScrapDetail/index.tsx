@@ -1,13 +1,10 @@
 import { Link } from '@tanstack/react-router'
+import type { Owner } from '@/features/timeline/types'
 import UserPreview from '@/components/ui/UserPreview'
 import EditButton from '@/features/timeline/components/EditButton'
 
 interface Props {
-  owner: {
-    id: string
-    avatarUrl: string | null
-    name: string
-  }
+  owner: Owner
   scrap: {
     id: string
     title: string
