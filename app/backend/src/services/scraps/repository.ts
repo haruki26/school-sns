@@ -61,6 +61,7 @@ export const scrapsRepository = {
             avatarUrl: true,
           },
         },
+        tagScraps: { select: { tagId: true } },
       },
     })
   },
