@@ -1,5 +1,6 @@
 import { Result } from '@praha/byethrow'
 import type { Artifacts } from '../../../generated/prisma/sqlserver/index.js'
+import { isPublished } from '../../lib/filterPublished.js'
 import { summarizePost } from '../../lib/langchain/index.js'
 import { TagNotFoundError } from '../tags/error.js'
 import { tagsRepository } from '../tags/repository.js'
@@ -35,7 +36,7 @@ export const artifactsService = {
       ids,
       userIds,
     })
-    return Result.succeed(artifacts)
+    return Result.succeed(artifacts.filter(isPublished))
   },
   getArtifactById: async (artifactId: string) => {
     const artifact = await artifactsRepository.getArtifactById(artifactId)

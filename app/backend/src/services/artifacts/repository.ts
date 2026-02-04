@@ -16,12 +16,24 @@ export const artifactsRepository = {
       where: {
         id: options.ids ? { in: options.ids } : undefined,
         userId: options.userIds ? { in: options.userIds } : undefined,
+        publishedAt: {
+          not: null,
+        },
       },
       take: options.limit,
       skip:
         options.page && options.limit
           ? (options.page - 1) * options.limit
           : undefined,
+      include: {
+        user: {
+          select: {
+            id: true,
+            userName: true,
+            avatarUrl: true,
+          },
+        },
+      },
     })
   },
   getArtifactById: async (artifactId: string) => {
