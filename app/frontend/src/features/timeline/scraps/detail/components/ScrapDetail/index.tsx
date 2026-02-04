@@ -1,4 +1,6 @@
+import { Link } from '@tanstack/react-router'
 import UserPreview from '@/components/ui/UserPreview'
+import EditButton from '@/features/timeline/components/EditButton'
 
 interface Props {
   owner: {
@@ -13,18 +15,32 @@ interface Props {
     createdAt: string
     updatedAt: string
   }
+  isEditable: boolean
 }
 
-const ScrapDetail: React.FC<Props> = ({ owner, scrap }) => {
+const ScrapDetail: React.FC<Props> = ({ owner, scrap, isEditable }) => {
   return (
     <div className="flex flex-col gap-2 px-2 py-3 bg-slate-50">
       <h3 className="text-2xl font-bold">{scrap.title}</h3>
-      <UserPreview
-        id={owner.id}
-        avatarUrl={owner.avatarUrl}
-        name={owner.name}
-        classNames={{ avatar: 'w-8 h-8', name: 'text-lg' }}
-      />
+      <div className="flex justify-between items-center">
+        <div className="flex flex-col gap-1">
+          <UserPreview
+            id={owner.id}
+            avatarUrl={owner.avatarUrl}
+            name={owner.name}
+            classNames={{ avatar: 'w-8 h-8', name: 'text-lg' }}
+          />
+        </div>
+        {isEditable && (
+          <Link
+            to="/timeline/scraps/edit/$id"
+            params={{ id: scrap.id }}
+            className=""
+          >
+            <EditButton />
+          </Link>
+        )}
+      </div>
       <div className="px-2 text-slate-700 whitespace-pre-wrap wrap-break-words">
         {scrap.body}
       </div>

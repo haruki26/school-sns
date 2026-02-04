@@ -6,6 +6,7 @@ import Actions from '@/features/timeline/scraps/detail/components/Actions'
 import ScrapDetail from '@/features/timeline/scraps/detail/components/ScrapDetail'
 import Popover from '@/components/layout/Popover'
 import NewPostButton from '@/features/timeline/components/NewPostButton'
+import { useFetchSelfInfoOptions } from '@/api/routes/users'
 
 export const Route = createLazyFileRoute('/timeline/scraps/detail/$id/')({
   component: RouteComponent,
@@ -13,6 +14,9 @@ export const Route = createLazyFileRoute('/timeline/scraps/detail/$id/')({
 
 function RouteComponent() {
   const params = Route.useParams()
+  const {
+    data: { id: userId },
+  } = useSuspenseQuery(useFetchSelfInfoOptions())
   const {
     data: { scraps: replies, ...rootScrap },
   } = useSuspenseQuery(useFetchScrapDetailOptions(params.id))
@@ -33,6 +37,7 @@ function RouteComponent() {
             createdAt: rootScrap.createdAt,
             updatedAt: rootScrap.updatedAt,
           }}
+          isEditable={userId === rootScrap.user.id}
         />
         <Actions
           likesCount={0}
