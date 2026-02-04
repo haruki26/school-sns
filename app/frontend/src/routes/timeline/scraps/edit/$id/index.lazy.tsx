@@ -4,9 +4,16 @@ import { useFetchScrapDetailOptions } from '@/api/routes/scraps'
 import { useUpdateScrapForm } from '@/features/timeline/scraps/edit/hooks/useUpdateScrapForm'
 import { useFetchTagsOptions } from '@/api/routes/tags'
 import ScrapEditor from '@/features/timeline/scraps/components/ScrapEditor'
+import { UneditableError } from '@/features/timeline/scraps/edit/errors'
 
 export const Route = createLazyFileRoute('/timeline/scraps/edit/$id/')({
   component: RouteComponent,
+  errorComponent: ({ error }) => {
+    if (error instanceof UneditableError) {
+      return <div>このスクラップを編集する権限がありません。</div>
+    }
+    return <div>予期せぬエラーが発生しました。</div>
+  },
 })
 
 function RouteComponent() {
