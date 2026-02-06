@@ -42,6 +42,27 @@ export const scrapsRepository = {
   getScrapById: async (scrapId: string) => {
     return await prisma.scraps.findUnique({
       where: { id: scrapId },
+      include: {
+        scraps: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                userName: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            userName: true,
+            avatarUrl: true,
+          },
+        },
+        tagScraps: { select: { tagId: true } },
+      },
     })
   },
   addScrap: async (content: Omit<Scraps, 'id' | 'createdAt' | 'updatedAt'>) => {

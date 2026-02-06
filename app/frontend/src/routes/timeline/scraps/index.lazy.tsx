@@ -1,9 +1,11 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { createLazyFileRoute } from '@tanstack/react-router'
+import { Link, createLazyFileRoute } from '@tanstack/react-router'
 import { useFetchScrapsOptions } from '@/api/routes/scraps'
 import FilterTag from '@/components/ui/FilterTag'
 import ScrapPreview from '@/features/timeline/scraps/components/ScrapPreview'
 import { FILTERS, FILTER_LABELS } from '@/features/timeline/scraps/constants'
+import Popover from '@/components/layout/Popover'
+import NewPostButton from '@/features/timeline/components/NewPostButton'
 
 export const Route = createLazyFileRoute('/timeline/scraps/')({
   component: RouteComponent,
@@ -30,22 +32,32 @@ function RouteComponent() {
         ))}
       </div>
       <div className="flex flex-col gap-3 px-2 py-4">
-        {data.map((d) => (
-          <ScrapPreview
-            key={d.id}
-            owner={{
-              id: d.user.id,
-              avatarUrl: d.user.avatarUrl,
-              name: d.user.userName,
-            }}
-            scrap={{
-              id: d.id,
-              content: d.body,
-              createdAt: d.createdAt,
-            }}
-          />
-        ))}
+        {data
+          .sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          )
+          .map((d) => (
+            <ScrapPreview
+              key={d.id}
+              owner={{
+                id: d.user.id,
+                avatarUrl: d.user.avatarUrl,
+                name: d.user.userName,
+              }}
+              scrap={{
+                id: d.id,
+                content: d.body,
+              }}
+              className="px-4 py-3 rounded-lg shadow-sm gap-3"
+            />
+          ))}
       </div>
+      <Popover>
+        <Link to="/timeline/scraps/create">
+          <NewPostButton variant="new" />
+        </Link>
+      </Popover>
     </div>
   )
 }
