@@ -174,7 +174,12 @@ export const scraps = new Hono()
           403,
         )
       }
-      return c.json(result.value, 200)
+      return c.json(
+        {
+          message: 'Update successful',
+        },
+        200,
+      )
     },
   )
   .delete(

@@ -1,10 +1,7 @@
 import { Result } from '@praha/byethrow'
+import { isPublished } from '../../lib/typeCheckFilter.js'
 import { searchRepository } from './repository.js'
 import type { SearchResult, SearchType } from './type.js'
-
-const isPublished = <T extends Record<PropertyKey, unknown>>(
-  data: T & { publishedAt: Date | null },
-): data is T & { publishedAt: Date } => data.publishedAt !== null
 
 export const searchService = {
   searchByKeyword: async (keyword: string, type: SearchType = 'all') => {

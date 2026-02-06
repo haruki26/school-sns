@@ -23,7 +23,7 @@ export type SelfInfo = {
 const useFetchSelfInfoOptions = () =>
   queryOptions({
     queryKey: usersKeys.me(),
-    queryFn: async (): Promise<SelfInfo> => {
+    queryFn: async () => {
       const res = await apiClient.users.me.$get()
       if (!res.ok) {
         return await parseApiError(res)

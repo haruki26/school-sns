@@ -1,6 +1,8 @@
 import { Result } from '@praha/byethrow'
 import type { Artifacts } from '../../../generated/prisma/sqlserver/index.js'
+import { InvalidArtifactStatusError } from '../../errors.js'
 import { summarizePost } from '../../lib/langchain/index.js'
+import { isPublished, isStatusString } from '../../lib/typeCheckFilter.js'
 import { TagNotFoundError } from '../tags/error.js'
 import { tagsRepository } from '../tags/repository.js'
 import {
@@ -35,12 +37,16 @@ export const artifactsService = {
       ids,
       userIds,
     })
-    return Result.succeed(artifacts)
+    return Result.succeed(artifacts.filter(isPublished).filter(isStatusString))
   },
   getArtifactById: async (artifactId: string) => {
     const artifact = await artifactsRepository.getArtifactById(artifactId)
     if (artifact === null) {
       return Result.fail(new ArtifactNotFoundError(artifactId))
+    }
+
+    if (!isStatusString(artifact)) {
+      throw new InvalidArtifactStatusError()
     }
     return Result.succeed(artifact)
   },

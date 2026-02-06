@@ -21,7 +21,6 @@ export const useLoginForm = () => {
       onSubmit: loginFormSchema,
     },
     onSubmit: ({ value }) => {
-      console.log('Submitting login form with values:', value)
       loginMutation.mutate(value, {
         onSuccess: () => {
           navigate({ to: '/' })

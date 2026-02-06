@@ -1,9 +1,17 @@
-import { queryOptions } from '@tanstack/react-query'
-import type { GetScrapsQuerySchema } from '@/api/routes/scraps/type'
+import {
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query'
+import type {
+  GetScrapsQuerySchema,
+  PostScrapRequestBody,
+  UpdateScrapRequestBody,
+} from '@/api/routes/scraps/type'
 import { scrapsKeys } from '@/api/routes/scraps/key'
 import { apiClient } from '@/api/shared/apiClient'
 import { convertQueryParams } from '@/api/shared/convertQueryParams'
-import { ApiError } from '@/api/shared/error'
+import { parseApiError } from '@/api/shared/error'
 
 const useFetchScrapsOptions = (query?: GetScrapsQuerySchema) =>
   queryOptions({
@@ -14,14 +22,111 @@ const useFetchScrapsOptions = (query?: GetScrapsQuerySchema) =>
       })
 
       if (!res.ok) {
-        const data = await res.json()
-        if ('message' in data) {
-          throw new ApiError(data.message, res.status)
-        }
-        throw new ApiError('An unknown error occurred', res.status)
+        return parseApiError(res)
       }
       return await res.json()
     },
   })
 
-export { useFetchScrapsOptions }
+const useFetchScrapDetailOptions = (id: string) =>
+  queryOptions({
+    queryKey: scrapsKeys.detail(id),
+    queryFn: async () => {
+      const res = await apiClient.scraps[':scrapId'].$get({
+        param: {
+          scrapId: id,
+        },
+      })
+
+      if (!res.ok) {
+        return parseApiError(res)
+      }
+      return await res.json()
+    },
+  })
+
+const usePostScrapMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (body: PostScrapRequestBody) => {
+      const res = await apiClient.scraps.$post({
+        json: body,
+      })
+
+      if (!res.ok) {
+        return parseApiError(res)
+      }
+      return await res.json()
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: scrapsKeys.lists(),
+      })
+    },
+  })
+}
+
+const useUpdateScrapMutation = (id: string) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (body: UpdateScrapRequestBody) => {
+      const res = await apiClient.scraps[':scrapId'].$patch({
+        param: {
+          scrapId: id,
+        },
+        json: body,
+      })
+
+      if (!res.ok) {
+        return parseApiError(res)
+      }
+
+      return await res.json()
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: scrapsKeys.lists(),
+      })
+      queryClient.invalidateQueries({
+        queryKey: scrapsKeys.detail(id),
+      })
+    },
+  })
+}
+
+const useDeleteScrap = (id: string) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async () => {
+      const res = await apiClient.scraps[':scrapId'].$delete({
+        param: {
+          scrapId: id,
+        },
+      })
+
+      if (!res.ok) {
+        return parseApiError(res)
+      }
+      return await res.json()
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: scrapsKeys.lists(),
+      })
+      queryClient.invalidateQueries({
+        queryKey: scrapsKeys.detail(id),
+      })
+    },
+  })
+}
+
+export {
+  useFetchScrapsOptions,
+  useFetchScrapDetailOptions,
+  usePostScrapMutation,
+  useUpdateScrapMutation,
+  useDeleteScrap,
+}
