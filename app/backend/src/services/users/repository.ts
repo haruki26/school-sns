@@ -5,6 +5,19 @@ export const usersRepository = {
   getById: async (id: string) => {
     return await prisma.users.findUnique({
       where: { id },
+      select: {
+        id: true,
+        userName: true,
+        bio: true,
+        avatarUrl: true,
+        _count: {
+          select: {
+            userFolloweeRelationships: true,
+            userFollowerRelationships: true,
+            artifacts: true,
+          },
+        },
+      },
     })
   },
   updateById: async (id: string, data: EditUserInfo) => {
