@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import UserPreview from '@/components/ui/UserPreview'
+import { Palette } from 'lucide-react'
+import Avatar from '@/components/ui/Avatar'
 import CountViewer from '@/features/profile/components/CountViewer'
 
 interface Props {
@@ -21,27 +22,53 @@ const UserOverview: React.FC<Props> = ({
   followingCount,
   artifactsCount,
 }) => {
+  const handle = userName.startsWith('@') ? userName : `@${userName}`
+
   return (
-    <div className="flex flex-col gap-3 w-full">
-      <UserPreview
-        id={id}
-        avatarUrl={avatarUrl}
-        name={userName}
-        classNames={{
-          container: 'py-2',
-          avatar: 'h-10 w-10',
-          name: 'text-xl',
-        }}
-      />
-      {bio && <p className="text-sm text-gray-600">{bio}</p>}
-      <div className="py-2 px-5 flex gap-3 border-y border-slate-600 justify-between">
-        <Link to="/profile/$id/$userName/followers" params={{ id, userName }}>
+    <div className="flex flex-col gap-4 w-full">
+      <div className="flex items-start gap-4">
+        <div className="relative shrink-0">
+          <div className="p-0.5 rounded-full bg-linear-to-tr from-sky-500 via-violet-500 to-blue-400">
+            <Avatar
+              src={avatarUrl ?? undefined}
+              alt={userName}
+              className="h-20 w-20 border-2 border-white"
+            />
+          </div>
+          <div className="absolute -bottom-1 -right-1 rounded-full border border-slate-200 bg-white p-1 shadow-sm">
+            <Palette className="h-4 w-4 text-sky-500" />
+          </div>
+        </div>
+        <div className="flex flex-col gap-1">
+          <h1 className="text-xl font-bold text-slate-900">{userName}</h1>
+          <span className="text-sm text-slate-500">{handle}</span>
+          {bio && (
+            <p className="text-sm text-slate-600 leading-relaxed max-w-md">
+              {bio}
+            </p>
+          )}
+        </div>
+      </div>
+      <div className="flex w-full justify-between gap-2 border-y border-slate-200 px-2 py-3">
+        <Link
+          to="/profile/$id/$userName/followers"
+          params={{ id, userName }}
+          className="flex-1"
+        >
           <CountViewer label="Followers" count={followersCount} />
         </Link>
-        <Link to="/profile/$id/$userName/following" params={{ id, userName }}>
+        <div className="w-px bg-slate-200" />
+        <Link
+          to="/profile/$id/$userName/following"
+          params={{ id, userName }}
+          className="flex-1"
+        >
           <CountViewer label="Following" count={followingCount} />
         </Link>
-        <CountViewer label="Artifacts" count={artifactsCount} />
+        <div className="w-px bg-slate-200" />
+        <div className="flex-1">
+          <CountViewer label="Artifacts" count={artifactsCount} />
+        </div>
       </div>
     </div>
   )
