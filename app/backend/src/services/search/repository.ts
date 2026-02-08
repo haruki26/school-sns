@@ -20,9 +20,14 @@ export const searchRepository = {
           },
         ],
       },
-      include: {
+      select: {
+        id: true,
+        title: true,
+        summaryByAI: true,
+        publishedAt: true,
         user: {
           select: {
+            id: true,
             userName: true,
             avatarUrl: true,
           },
@@ -60,9 +65,15 @@ export const searchRepository = {
           },
         ],
       },
-      include: {
+      select: {
+        id: true,
+        body: true,
+        title: true,
+        createdAt: true,
+        updatedAt: true,
         user: {
           select: {
+            id: true,
             userName: true,
             avatarUrl: true,
           },

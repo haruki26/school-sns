@@ -37,7 +37,7 @@ function RouteComponent() {
             key={a.id}
             artifact={a}
             owner={{
-              id: a.userId,
+              id: a.user.id,
               name: a.user.userName,
               avatarUrl: a.user.avatarUrl,
             }}
@@ -52,7 +52,7 @@ function RouteComponent() {
               content: s.body,
             }}
             owner={{
-              id: s.userId,
+              id: s.user.id,
               name: s.user.userName,
               avatarUrl: s.user.avatarUrl,
             }}
