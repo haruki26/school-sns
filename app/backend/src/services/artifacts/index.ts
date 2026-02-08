@@ -1,6 +1,7 @@
 import { Result } from '@praha/byethrow'
 import type { Artifacts } from '../../../generated/prisma/index.js'
 import { InvalidArtifactStatusError } from '../../errors.js'
+import { toTags } from '../../lib/formatter.js'
 import { summarizePost } from '../../lib/langchain/index.js'
 import { isPublished, isStatusString } from '../../lib/typeCheckFilter.js'
 import { TagNotFoundError } from '../tags/error.js'
@@ -32,12 +33,20 @@ export const artifactsService = {
           ({ artifactId }) => artifactId,
         )
       : undefined
-    const artifacts = await artifactsRepository.getArtifacts({
-      ...options,
-      ids,
-      userIds,
-    })
-    return Result.succeed(artifacts.filter(isPublished).filter(isStatusString))
+
+    const artifacts = (
+      await artifactsRepository.getArtifacts({
+        ...options,
+        ids,
+        userIds,
+        includeDrafts: false,
+      })
+    )
+      .filter(isPublished)
+      .filter(isStatusString)
+      .map(toTags)
+
+    return Result.succeed(artifacts)
   },
   getArtifactById: async (artifactId: string) => {
     const artifact = await artifactsRepository.getArtifactById(artifactId)
@@ -48,7 +57,7 @@ export const artifactsService = {
     if (!isStatusString(artifact)) {
       throw new InvalidArtifactStatusError()
     }
-    return Result.succeed(artifact)
+    return Result.succeed(toTags(artifact))
   },
   deleteArtifact: async (artifactId: string, userId: string) => {
     if (!(await artifactsRepository.isOwnArtifact(artifactId, userId))) {
