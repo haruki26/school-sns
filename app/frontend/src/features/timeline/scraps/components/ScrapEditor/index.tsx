@@ -1,3 +1,5 @@
+import { useCreateBlockNote } from '@blocknote/react'
+import { ja } from '@blocknote/core/locales'
 import type { useScrapForm } from '@/features/timeline/scraps/hooks/useScrapForm'
 import type React from 'react'
 import type { Tag } from '@/features/timeline/types'
@@ -12,6 +14,10 @@ interface Props {
 }
 
 const ScrapEditor: React.FC<Props> = ({ form, tags, submitLabel = '投稿' }) => {
+  const bodyEditor = useCreateBlockNote({
+    dictionary: ja,
+  })
+
   return (
     <form
       onSubmit={(e) => {
@@ -25,7 +31,7 @@ const ScrapEditor: React.FC<Props> = ({ form, tags, submitLabel = '投稿' }) =>
         {(field) => (
           <div className="w-full flex flex-col gap-1">
             <label htmlFor={field.name} className="text-lg font-medium">
-              Title
+              タイトル
             </label>
             <input
               id={field.name}
@@ -49,6 +55,10 @@ const ScrapEditor: React.FC<Props> = ({ form, tags, submitLabel = '投稿' }) =>
               id={field.name}
               initialContent={field.state.value}
               onChange={(content) => field.handleChange(content)}
+              editor={bodyEditor}
+              staticFormattingToolbar
+              sideMenu={false}
+              slashMenu={false}
               className="max-h-full overflow-y-auto"
             />
           </div>
