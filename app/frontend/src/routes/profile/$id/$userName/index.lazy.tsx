@@ -111,7 +111,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="flex flex-col items-center w-full bg-white min-h-full pb-24">
+    <div className="flex flex-col items-center w-full bg-white min-h-full">
       <div className="w-full max-w-2xl px-4 pt-6 pb-3 flex flex-col gap-4">
         <UserOverview
           id={userInfo.id}
