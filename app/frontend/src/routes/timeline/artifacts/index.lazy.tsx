@@ -4,7 +4,7 @@ import { useFetchArtifactsOptions } from '@/api/routes/artifacts'
 import Popover from '@/components/layout/Popover'
 import NewPostButton from '@/features/timeline/components/NewPostButton'
 import ArtifactPreview from '@/components/ui/ArtifactPreview'
-import StickyFilterBar from '@/components/ui/StickyFilterBar'
+import StickyFilterBar from '@/components/layout/StickyFilterBar'
 import {
   ARTIFACT_FILTERS,
   ARTIFACT_FILTER_LABELS,
@@ -17,16 +17,19 @@ export const Route = createLazyFileRoute('/timeline/artifacts/')({
 function RouteComponent() {
   const { data } = useSuspenseQuery(useFetchArtifactsOptions())
   const { filter } = Route.useSearch()
-  const navigate = Route.useNavigate()
 
   return (
     <div className="w-full">
-      <StickyFilterBar
-        items={ARTIFACT_FILTERS}
-        selected={filter || 'newest'}
-        getLabel={(f) => ARTIFACT_FILTER_LABELS[f]}
-        onSelect={(f) => navigate({ search: { filter: f } })}
-      />
+      <StickyFilterBar>
+        {ARTIFACT_FILTERS.map((f) => (
+          <Link key={f} to="." search={{ filter: f }} className="shrink-0">
+            <StickyFilterBar.Tag
+              label={ARTIFACT_FILTER_LABELS[f]}
+              isSelected={(filter || 'newest') === f}
+            />
+          </Link>
+        ))}
+      </StickyFilterBar>
       <div className="flex flex-col gap-3 px-2 mt-3">
         {data
           .sort(
