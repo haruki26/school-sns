@@ -4,6 +4,7 @@ import {
   useUnfollowUserMutation,
 } from '@/api/routes/users'
 import Button from '@/components/ui/Button'
+import { cn } from '@/utils/cn'
 
 interface Props {
   targetUserId: string
@@ -36,10 +37,10 @@ const FollowButton: React.FC<Props> = ({
         }
       }}
       disabled={isPending}
-      className={
-        className ??
-        'w-full bg-sky-500 hover:bg-sky-500/90 text-white text-sm font-bold rounded-lg flex items-center justify-center gap-2 h-10'
-      }
+      className={cn(
+        'w-full bg-sky-500 hover:bg-sky-500/90 text-white text-sm font-bold rounded-lg flex items-center justify-center gap-2 h-10',
+        className,
+      )}
       aria-busy={isPending}
     >
       <Icon className="h-4 w-4" />
