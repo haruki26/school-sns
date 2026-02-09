@@ -9,7 +9,7 @@ const artifactsSearchSchema = z.object({
 })
 
 export const Route = createFileRoute('/timeline/artifacts/')({
-  validateSearch: (search) => artifactsSearchSchema.parse(search),
+  validateSearch: artifactsSearchSchema,
   loader: ({ context: { queryClient } }) => {
     queryClient.ensureQueryData(useFetchArtifactsOptions())
   },
