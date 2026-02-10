@@ -57,11 +57,10 @@ function RouteComponent() {
             scrap={{
               id: r.id,
               content: r.body,
-              createdAt:
-                (r as { createdAt?: string }).createdAt ??
-                new Date().toISOString(),
-              likeCount: 0,
+              createdAt: r.createdAt,
+              likeCount: r._count.scrapLikes,
               commentCount: r._count.scraps,
+              isLiked: r.isLiked,
             }}
             className="px-4 py-3 rounded-lg shadow-sm gap-3"
           />

@@ -123,10 +123,63 @@ const useDeleteScrap = (id: string) => {
   })
 }
 
+const useLikeScrapMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (scrapId: string) => {
+      const res = await apiClient.scraps[':scrapId'].like.$post({
+        param: {
+          scrapId,
+        },
+      })
+
+      if (!res.ok) {
+        return parseApiError(res)
+      }
+      return await res.json()
+    },
+    onSuccess: (_, scrapId) => {
+      queryClient.invalidateQueries({
+        queryKey: scrapsKeys.lists(),
+      })
+      queryClient.invalidateQueries({
+        queryKey: scrapsKeys.detail(scrapId),
+      })
+    },
+  })
+}
+
+const useUnlikeScrapMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (scrapId: string) => {
+      const res = await apiClient.scraps[':scrapId'].like.$delete({
+        param: {
+          scrapId,
+        },
+      })
+
+      return await res.json()
+    },
+    onSuccess: (_, scrapId) => {
+      queryClient.invalidateQueries({
+        queryKey: scrapsKeys.lists(),
+      })
+      queryClient.invalidateQueries({
+        queryKey: scrapsKeys.detail(scrapId),
+      })
+    },
+  })
+}
+
 export {
   useFetchScrapsOptions,
   useFetchScrapDetailOptions,
   usePostScrapMutation,
   useUpdateScrapMutation,
   useDeleteScrap,
+  useLikeScrapMutation,
+  useUnlikeScrapMutation,
 }
